@@ -5,7 +5,6 @@ import beman.bounds_test;
 
 namespace bt = beman::bounds_test;
 
-TEST_CASE("Placeholder") {
-    bt::placeholder(1);
-    REQUIRE(1);
+TEST_CASE("Still A Placeholder") {
+  REQUIRE(bt::can_convert_modular<unsigned>(1));
 }

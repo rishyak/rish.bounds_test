@@ -5,4 +5,6 @@ import beman.bounds_test;
 
 namespace bt = beman::bounds_test;
 
-int main(int argc, char** /* argv */) { return bt::placeholder(argc); }
+int main(int argc, char** /* argv */) {
+  return bt::can_convert_modular<unsigned>(argc);
+}
