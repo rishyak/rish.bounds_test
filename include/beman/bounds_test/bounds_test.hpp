@@ -4,6 +4,7 @@
 #define BEMAN_BOUNDS_TEST_IDENTITY_HPP
 
 #include <concepts>
+#include <limits>
 #include <type_traits>
 
 namespace beman::bounds_test {
@@ -33,10 +34,18 @@ constexpr bool can_decrement(A a) noexcept {
 }
 
 template <std::integral A>
-constexpr bool can_promote(A a) noexcept;
+constexpr bool can_promote(A) noexcept {
+  return true;
+}
 
 template <std::integral A>
-constexpr bool can_negate(A a) noexcept;
+constexpr bool can_negate(A a) noexcept {
+  using result_t = decltype(-a);
+  if constexpr (std::is_unsigned_v<result_t>)
+    return a == 0;
+  else
+    return a != std::numeric_limits<result_t>::min();
+}
 
 template <std::integral A>
 constexpr bool can_bitwise_not(A a) noexcept;
@@ -57,7 +66,13 @@ constexpr bool can_promote_modular(A) noexcept {
 }
 
 template <std::integral A>
-constexpr bool can_negate_modular(A a) noexcept;
+constexpr bool can_negate_modular(A a) noexcept {
+  using result_t = decltype(-a);
+  if constexpr (std::is_unsigned_v<result_t>)
+    return true;
+  else
+    return a != std::numeric_limits<result_t>::min();
+}
 
 template <std::integral A>
 constexpr bool can_bitwise_not_modular(A a) noexcept;
