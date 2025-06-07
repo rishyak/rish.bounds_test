@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef BEMAN_BOUNDS_TEST_IDENTITY_HPP
-#define BEMAN_BOUNDS_TEST_IDENTITY_HPP
+#ifndef BEMAN_BOUNDS_TEST_BOUNDS_TEST_HPP
+#define BEMAN_BOUNDS_TEST_BOUNDS_TEST_HPP
 
 #include <concepts>
 #include <limits>
@@ -190,4 +190,4 @@ constexpr bool can_bitwise_or_in_place_modular(A a, B b) noexcept;
 
 } // namespace beman::bounds_test
 
-#endif // BEMAN_BOUNDS_TEST_IDENTITY_HPP
+#endif // BEMAN_BOUNDS_TEST_BOUNDS_TEST_HPP
