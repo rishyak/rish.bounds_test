@@ -18,7 +18,7 @@ constexpr bool can_convert_modular(A) noexcept {
 
 template <std::integral A>
 constexpr bool can_increment(A a) noexcept {
-  if constexpr (std::is_unsigned_v<A>(a))
+  if constexpr (std::is_unsigned_v<A>)
     return can_increment_modular(a);
   else
     return can_add(a, static_cast<A>(1));
@@ -26,7 +26,7 @@ constexpr bool can_increment(A a) noexcept {
 
 template <std::integral A>
 constexpr bool can_decrement(A a) noexcept {
-  if constexpr (std::is_unsigned_v<A>(a))
+  if constexpr (std::is_unsigned_v<A>)
     return can_decrement_modular(a);
   else
     return can_subtract(a, static_cast<A>(1));
