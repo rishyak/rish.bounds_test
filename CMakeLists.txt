@@ -33,14 +33,12 @@ option(
 add_library(beman.bounds_test)
 add_library(beman::bounds_test ALIAS beman.bounds_test)
 
-# gersemi: off
 set_target_properties(
     beman.bounds_test
     PROPERTIES
         VERIFY_INTERFACE_HEADER_SETS ON
         EXPORT_NAME bounds_test
 )
-
 
 target_sources(
     beman.bounds_test
@@ -50,6 +48,7 @@ target_sources(
         BASE_DIRS include
         FILES
             include/beman/bounds_test/bounds_test.hpp
+            include/beman/bounds_test/plat/common.hpp
 
     PUBLIC
         FILE_SET CXX_MODULES
@@ -59,6 +58,9 @@ target_sources(
 )
 
 include(GNUInstallDirs)
+include(cmake/check_plat.cmake)
+
+add_subdirectory(include/beman/bounds_test/plat)
 
 install(
     TARGETS beman.bounds_test
@@ -82,6 +84,7 @@ if(BEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE)
     install(
         FILES
             cmake/beman.bounds_test-config.cmake
+            cmake/check_plat.cmake
             ${CMAKE_CURRENT_BINARY_DIR}/beman.bounds_test-config-version.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/beman.bounds_test
         COMPONENT beman.bounds_test
@@ -95,7 +98,6 @@ if(BEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE)
         COMPONENT beman.bounds_test
     )
 endif()
-# gersemi: on
 
 if(BEMAN_BOUNDS_TEST_BUILD_TESTS)
     include(CTestUseLaunchers)

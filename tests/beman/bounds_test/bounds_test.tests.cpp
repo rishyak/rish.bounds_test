@@ -73,3 +73,139 @@ TEST_CASE("can_negate_modular behaviour differs only for unsigned", "[comparison
   REQUIRE_FALSE(bt::can_negate<int>(y));
   REQUIRE_FALSE(bt::can_negate_modular<int>(y));
 }
+
+TEST_CASE("can_add unsigned", "[bt::can_add]") {
+  constexpr auto f = [](auto a) {
+    using T = decltype(a);
+    using U = decltype(a + a);
+    constexpr auto lmax = std::numeric_limits<U>::max();
+    STATIC_REQUIRE(bt::can_add(U{0}, T{0}));
+    STATIC_REQUIRE(bt::can_add(U{1}, T{1}));
+    STATIC_REQUIRE(bt::can_add(U{lmax}, T{0}));
+    STATIC_REQUIRE(!bt::can_add(U{lmax}, T{1}));
+  };
+  f(std::uint8_t{});
+  f(std::uint16_t{});
+  f(std::uint32_t{});
+  f(std::uint64_t{});
+}
+
+TEST_CASE("can_add signed", "[bt::can_add]") {
+  constexpr auto f = [](auto a) {
+    using T = decltype(a);
+    using U = decltype(a + a);
+    constexpr auto lmin = std::numeric_limits<U>::min();
+    constexpr auto lmax = std::numeric_limits<U>::max();
+    STATIC_REQUIRE(bt::can_add(U{0}, T{0}));
+    STATIC_REQUIRE(bt::can_add(U{1}, T{1}));
+    STATIC_REQUIRE(bt::can_add(U{lmax}, T{-1}));
+    STATIC_REQUIRE(bt::can_add(U{lmin}, T{1}));
+    STATIC_REQUIRE(!bt::can_add(U{lmax}, T{1}));
+    STATIC_REQUIRE(!bt::can_add(U{lmin}, T{-1}));
+  };
+  f(std::int8_t{});
+  f(std::int16_t{});
+  f(std::int32_t{});
+  f(std::int64_t{});
+}
+
+TEST_CASE("can_add_in_place unsigned", "[bt::can_add_in_place]") {
+  constexpr auto f = [](auto a) {
+    using T = decltype(a);
+    constexpr auto lmax = std::numeric_limits<T>::max();
+    STATIC_REQUIRE(bt::can_add_in_place(T{0}, T{0}));
+    STATIC_REQUIRE(bt::can_add_in_place(T{1}, T{1}));
+    STATIC_REQUIRE(bt::can_add_in_place(T{lmax}, T{0}));
+    STATIC_REQUIRE(!bt::can_add_in_place(T{lmax}, T{1}));
+  };
+  f(std::uint8_t{});
+  f(std::uint16_t{});
+  f(std::uint32_t{});
+  f(std::uint64_t{});
+}
+
+TEST_CASE("can_add_in_place signed", "[bt::can_add_in_place]") {
+  constexpr auto f = [](auto a) {
+    using T = decltype(a);
+    constexpr auto lmin = std::numeric_limits<T>::min();
+    constexpr auto lmax = std::numeric_limits<T>::max();
+    STATIC_REQUIRE(bt::can_add_in_place(T{0}, T{0}));
+    STATIC_REQUIRE(bt::can_add_in_place(T{1}, T{1}));
+    STATIC_REQUIRE(bt::can_add_in_place(T{lmax}, T{-1}));
+    STATIC_REQUIRE(bt::can_add_in_place(T{lmin}, T{1}));
+    STATIC_REQUIRE(!bt::can_add_in_place(T{lmax}, T{1}));
+    STATIC_REQUIRE(!bt::can_add_in_place(T{lmin}, T{-1}));
+  };
+  f(std::int8_t{});
+  f(std::int16_t{});
+  f(std::int32_t{});
+  f(std::int64_t{});
+}
+
+TEST_CASE("can_subtract unsigned", "[bt::can_subtract]") {
+  constexpr auto f = [](auto a) {
+    using T = decltype(a);
+    using U = decltype(a - a);
+    constexpr auto lmin = std::numeric_limits<U>::min();
+    STATIC_REQUIRE(bt::can_subtract(U{0}, T{0}));
+    STATIC_REQUIRE(bt::can_subtract(U{1}, T{1}));
+    STATIC_REQUIRE(bt::can_subtract(U{lmin}, T{0}));
+    STATIC_REQUIRE(!bt::can_subtract(U{lmin}, T{1}));
+  };
+  f(std::uint8_t{});
+  f(std::uint16_t{});
+  f(std::uint32_t{});
+  f(std::uint64_t{});
+}
+
+TEST_CASE("can_subtract signed", "[bt::can_subtract]") {
+  constexpr auto f = [](auto a) {
+    using T = decltype(a);
+    using U = decltype(a - a);
+    constexpr auto lmin = std::numeric_limits<U>::min();
+    constexpr auto lmax = std::numeric_limits<U>::max();
+    STATIC_REQUIRE(bt::can_subtract(U{0}, T{0}));
+    STATIC_REQUIRE(bt::can_subtract(U{1}, T{1}));
+    STATIC_REQUIRE(bt::can_subtract(U{lmax}, T{1}));
+    STATIC_REQUIRE(bt::can_subtract(U{lmin}, T{-1}));
+    STATIC_REQUIRE(!bt::can_subtract(U{lmax}, T{-1}));
+    STATIC_REQUIRE(!bt::can_subtract(U{lmin}, T{1}));
+  };
+  f(std::int8_t{});
+  f(std::int16_t{});
+  f(std::int32_t{});
+  f(std::int64_t{});
+}
+
+TEST_CASE("can_subtract_in_place unsigned", "[bt::can_subtract_in_place]") {
+  constexpr auto f = [](auto a) {
+    using T = decltype(a);
+    constexpr auto lmin = std::numeric_limits<T>::min();
+    STATIC_REQUIRE(bt::can_subtract_in_place(T{0}, T{0}));
+    STATIC_REQUIRE(bt::can_subtract_in_place(T{1}, T{1}));
+    STATIC_REQUIRE(bt::can_subtract_in_place(T{lmin}, T{0}));
+    STATIC_REQUIRE(!bt::can_subtract_in_place(T{lmin}, T{1}));
+  };
+  f(std::uint8_t{});
+  f(std::uint16_t{});
+  f(std::uint32_t{});
+  f(std::uint64_t{});
+}
+
+TEST_CASE("can_subtract_in_place signed", "[bt::can_subtract_in_place]") {
+  constexpr auto f = [](auto a) {
+    using T = decltype(a);
+    constexpr auto lmin = std::numeric_limits<T>::min();
+    constexpr auto lmax = std::numeric_limits<T>::max();
+    STATIC_REQUIRE(bt::can_subtract_in_place(T{0}, T{0}));
+    STATIC_REQUIRE(bt::can_subtract_in_place(T{1}, T{1}));
+    STATIC_REQUIRE(bt::can_subtract_in_place(T{lmax}, T{1}));
+    STATIC_REQUIRE(bt::can_subtract_in_place(T{lmin}, T{-1}));
+    STATIC_REQUIRE(!bt::can_subtract_in_place(T{lmax}, T{-1}));
+    STATIC_REQUIRE(!bt::can_subtract_in_place(T{lmin}, T{1}));
+  };
+  f(std::int8_t{});
+  f(std::int16_t{});
+  f(std::int32_t{});
+  f(std::int64_t{});
+}

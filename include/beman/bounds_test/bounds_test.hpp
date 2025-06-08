@@ -7,13 +7,19 @@
 #include <limits>
 #include <type_traits>
 
+#ifdef __INTELLISENSE__
+#include "plat/generic/beman/bounds_test/plat/plat.hpp"
+#else
+#include <beman/bounds_test/plat/plat.hpp>
+#endif
+
 namespace beman::bounds_test {
 
 template <std::integral R, std::integral A>
 constexpr bool can_convert(A a) noexcept;
 
 template <std::integral R, std::integral A>
-constexpr bool can_convert_modular(A) noexcept {
+constexpr bool can_convert_modular(A /* a */) noexcept {
   return true;
 }
 
@@ -34,7 +40,7 @@ constexpr bool can_decrement(A a) noexcept {
 }
 
 template <std::integral A>
-constexpr bool can_promote(A) noexcept {
+constexpr bool can_promote(A /* a */) noexcept {
   return true;
 }
 
@@ -61,7 +67,7 @@ constexpr bool can_decrement_modular(A a) noexcept {
 }
 
 template <std::integral A>
-constexpr bool can_promote_modular(A) noexcept {
+constexpr bool can_promote_modular(A /* a */) noexcept {
   return true;
 }
 
@@ -78,16 +84,24 @@ template <std::integral A>
 constexpr bool can_bitwise_not_modular(A a) noexcept;
 
 template <std::integral A, std::integral B>
-constexpr bool can_add(A a, B b) noexcept;
+constexpr bool can_add(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_add(a, b, decltype(a + b){});
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_subtract(A a, B b) noexcept;
+constexpr bool can_subtract(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_sub(a, b, decltype(a - b){});
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_multiply(A a, B b) noexcept;
+constexpr bool can_multiply(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_mul(a, b, decltype(a * b){});
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_divide(A a, B b) noexcept;
+constexpr bool can_divide(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_div(a, b, decltype(a / b){});
+}
 
 template <std::integral A, std::integral B>
 constexpr bool can_take_remainder(A a, B b) noexcept;
@@ -123,7 +137,7 @@ template <std::integral A, std::integral B>
 constexpr bool can_shift_left_modular(A a, B b) noexcept;
 
 template <std::integral A, std::integral B>
-constexpr bool can_shift_right_modular(A a, B b) noexcept;
+constexpr bool can_shift_right_modular(A, B) noexcept;
 
 template <std::integral A, std::integral B>
 constexpr bool can_bitwise_and_modular(A a, B b) noexcept;
@@ -135,16 +149,24 @@ template <std::integral A, std::integral B>
 constexpr bool can_bitwise_or_modular(A a, B b) noexcept;
 
 template <std::integral A, std::integral B>
-constexpr bool can_add_in_place(A a, B b) noexcept;
+constexpr bool can_add_in_place(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_add(a, b, a);
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_subtract_in_place(A a, B b) noexcept;
+constexpr bool can_subtract_in_place(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_sub(a, b, a);
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_multiply_in_place(A a, B b) noexcept;
+constexpr bool can_multiply_in_place(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_mul(a, b, a);
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_divide_in_place(A a, B b) noexcept;
+constexpr bool can_divide_in_place(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_div(a, b, a);
+};
 
 template <std::integral A, std::integral B>
 constexpr bool can_take_remainder_in_place(A a, B b) noexcept;
