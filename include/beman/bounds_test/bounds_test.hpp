@@ -19,7 +19,7 @@ constexpr bool can_convert_modular(A) noexcept {
 
 template <std::integral A>
 constexpr bool can_increment(A a) noexcept {
-  if constexpr (std::is_unsigned_v<A>)
+  if constexpr (std::unsigned_integral<A>)
     return can_increment_modular(a);
   else
     return can_add(a, static_cast<A>(1));
@@ -27,7 +27,7 @@ constexpr bool can_increment(A a) noexcept {
 
 template <std::integral A>
 constexpr bool can_decrement(A a) noexcept {
-  if constexpr (std::is_unsigned_v<A>)
+  if constexpr (std::unsigned_integral<A>)
     return can_decrement_modular(a);
   else
     return can_subtract(a, static_cast<A>(1));
@@ -41,7 +41,7 @@ constexpr bool can_promote(A) noexcept {
 template <std::integral A>
 constexpr bool can_negate(A a) noexcept {
   using result_t = decltype(-a);
-  if constexpr (std::is_unsigned_v<result_t>)
+  if constexpr (std::unsigned_integral<result_t>)
     return a == 0;
   else
     return a != std::numeric_limits<result_t>::min();
@@ -68,7 +68,7 @@ constexpr bool can_promote_modular(A) noexcept {
 template <std::integral A>
 constexpr bool can_negate_modular(A a) noexcept {
   using result_t = decltype(-a);
-  if constexpr (std::is_unsigned_v<result_t>)
+  if constexpr (std::unsigned_integral<result_t>)
     return true;
   else
     return a != std::numeric_limits<result_t>::min();
