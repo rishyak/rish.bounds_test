@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 module;
 
-#include "bounds_test.hpp"
+#include <beman/bounds_test/bounds_test.hpp>
 
 export module beman.bounds_test;
 

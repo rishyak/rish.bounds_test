@@ -3,8 +3,11 @@
 #include <cstdint>
 #include <limits>
 
-// import beman.bounds_test;
+#ifdef __INTELLISENSE__
 #include <beman/bounds_test/bounds_test.hpp>
+#else
+import beman.bounds_test;
+#endif
 
 namespace bt = beman::bounds_test;
 
