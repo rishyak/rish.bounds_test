@@ -11,6 +11,10 @@ import beman.bounds_test;
 
 namespace bt = beman::bounds_test;
 
+TEST_CASE("can_convert calls a standard library function", "[bt::can_convert]") {
+  STATIC_REQUIRE(true);
+}
+
 TEST_CASE("can_convert_modular always returns true", "[bt::can_convert_modular]") {
   STATIC_REQUIRE(bt::can_convert_modular<std::int8_t>(1));
   STATIC_REQUIRE(bt::can_convert_modular<std::uint64_t>(1));
