@@ -5,7 +5,6 @@
 
 #include <concepts>
 #include <limits>
-#include <type_traits>
 
 namespace beman::bounds_test::detail {
 

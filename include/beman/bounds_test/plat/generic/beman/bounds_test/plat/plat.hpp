@@ -5,7 +5,6 @@
 
 #include <concepts>
 #include <limits>
-#include <type_traits>
 
 #include <beman/bounds_test/plat/common.hpp>
 

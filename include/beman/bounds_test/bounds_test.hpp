@@ -5,7 +5,6 @@
 
 #include <concepts>
 #include <limits>
-#include <type_traits>
 
 #ifdef __INTELLISENSE__
 #include "plat/generic/beman/bounds_test/plat/plat.hpp"
