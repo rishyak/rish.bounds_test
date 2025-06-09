@@ -27,18 +27,14 @@ constexpr bool can_convert_modular(A /* a */) noexcept {
 
 template <std::integral A>
 constexpr bool can_increment(A a) noexcept {
-  if constexpr (std::unsigned_integral<A>)
-    return can_increment_modular(a);
-  else
-    return can_add(a, static_cast<A>(1));
+  if constexpr (std::unsigned_integral<A>) return can_increment_modular(a);
+  return can_add(a, static_cast<A>(1));
 }
 
 template <std::integral A>
 constexpr bool can_decrement(A a) noexcept {
-  if constexpr (std::unsigned_integral<A>)
-    return can_decrement_modular(a);
-  else
-    return can_subtract(a, static_cast<A>(1));
+  if constexpr (std::unsigned_integral<A>) return can_decrement_modular(a);
+  return can_subtract(a, static_cast<A>(1));
 }
 
 template <std::integral A>
@@ -49,10 +45,8 @@ constexpr bool can_promote(A /* a */) noexcept {
 template <std::integral A>
 constexpr bool can_negate(A a) noexcept {
   using result_t = decltype(-a);
-  if constexpr (std::unsigned_integral<result_t>)
-    return a == 0;
-  else
-    return a != std::numeric_limits<result_t>::min();
+  if constexpr (std::unsigned_integral<result_t>) return !a;
+  return a != std::numeric_limits<result_t>::min();
 }
 
 template <std::integral A>
@@ -76,10 +70,8 @@ constexpr bool can_promote_modular(A /* a */) noexcept {
 template <std::integral A>
 constexpr bool can_negate_modular(A a) noexcept {
   using result_t = decltype(-a);
-  if constexpr (std::unsigned_integral<result_t>)
-    return true;
-  else
-    return a != std::numeric_limits<result_t>::min();
+  if constexpr (std::unsigned_integral<result_t>) return true;
+  return a != std::numeric_limits<result_t>::min();
 }
 
 template <std::integral A>
@@ -127,10 +119,16 @@ template <std::integral A, std::integral B>
 constexpr bool can_compare(A a, B b) noexcept;
 
 template <std::integral A, std::integral B>
-constexpr bool can_add_modular(A a, B b) noexcept;
+constexpr bool can_add_modular(A a, B b) noexcept {
+  if constexpr (std::unsigned_integral<decltype(a + b)>) return true;
+  return can_add(a, b);
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_subtract_modular(A a, B b) noexcept;
+constexpr bool can_subtract_modular(A a, B b) noexcept {
+  if constexpr (std::unsigned_integral<decltype(a - b)>) return true;
+  return can_subtract(a, b);
+}
 
 template <std::integral A, std::integral B>
 constexpr bool can_multiply_modular(A a, B b) noexcept;

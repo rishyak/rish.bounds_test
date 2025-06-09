@@ -12,15 +12,15 @@ import beman.bounds_test;
 namespace bt = beman::bounds_test;
 
 TEST_CASE("can_convert calls a standard library function", "[bt::can_convert]") {
-  STATIC_REQUIRE(true);
+  STATIC_REQUIRE(bt::can_convert<int>(0));
 }
 
 TEST_CASE("can_convert_modular always returns true", "[bt::can_convert_modular]") {
-  STATIC_REQUIRE(true);
+  STATIC_REQUIRE(bt::can_convert_modular<int>(0));
 }
 
 TEST_CASE("can_promote always returns true", "[bt::can_promote]") {
-  STATIC_REQUIRE(true);
+  STATIC_REQUIRE(bt::can_promote(0));
 }
 
 TEST_CASE("can_negate signed types", "[bt::can_negate]") {
