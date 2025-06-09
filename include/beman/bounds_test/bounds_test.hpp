@@ -98,7 +98,9 @@ constexpr bool can_divide(A a, B b) noexcept {
 }
 
 template <std::integral A, std::integral B>
-constexpr bool can_take_remainder(A a, B b) noexcept;
+constexpr bool can_take_remainder(A a, B b) noexcept {
+  return can_divide(a, b);
+}
 
 template <std::integral A, std::integral B>
 constexpr bool can_shift_left(A a, B b) noexcept;
@@ -169,7 +171,9 @@ constexpr bool can_divide_in_place(A a, B b) noexcept {
 };
 
 template <std::integral A, std::integral B>
-constexpr bool can_take_remainder_in_place(A a, B b) noexcept;
+constexpr bool can_take_remainder_in_place(A a, B b) noexcept {
+  return can_divide_in_place(a, b);
+}
 
 template <std::integral A, std::integral B>
 constexpr bool can_shift_left_in_place(A a, B b) noexcept;

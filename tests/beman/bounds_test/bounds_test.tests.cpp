@@ -202,3 +202,11 @@ TEST_CASE("can_subtract_in_place signed", "[bt::can_subtract_in_place]") {
   f(std::int32_t{});
   f(std::int64_t{});
 }
+
+TEST_CASE("can_take_remainder is can_divide", "[bt::can_take_remainder]") {
+  STATIC_REQUIRE_FALSE(bt::can_take_remainder(0, 0));
+}
+
+TEST_CASE("can_take_remainder_in_place is can_divide_in_place", "[bt::can_take_remainder_in_place]") {
+  STATIC_REQUIRE_FALSE(bt::can_take_remainder_in_place<int>(0, 0));
+}
