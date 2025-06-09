@@ -5,6 +5,7 @@
 
 #include <concepts>
 #include <limits>
+#include <utility>
 
 #ifdef __INTELLISENSE__
 #include "plat/generic/beman/bounds_test/plat/plat.hpp"
@@ -15,7 +16,9 @@
 namespace beman::bounds_test {
 
 template <std::integral R, std::integral A>
-constexpr bool can_convert(A a) noexcept;
+constexpr bool can_convert(A a) noexcept {
+  return std::in_range<R>(a);
+}
 
 template <std::integral R, std::integral A>
 constexpr bool can_convert_modular(A /* a */) noexcept {
