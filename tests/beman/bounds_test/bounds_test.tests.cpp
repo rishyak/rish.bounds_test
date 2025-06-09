@@ -66,12 +66,12 @@ TEST_CASE("can_negate_modular for unsigned types", "[bt::can_negate_modular]") {
 }
 
 TEST_CASE("can_negate_modular behaviour differs only for unsigned", "[comparison][bt::can_negate_modular]") {
-  unsigned int x = 5;
-  REQUIRE_FALSE(bt::can_negate<unsigned int>(x));
-  REQUIRE(bt::can_negate_modular<unsigned int>(x));
-  int y = std::numeric_limits<int>::min();
-  REQUIRE_FALSE(bt::can_negate<int>(y));
-  REQUIRE_FALSE(bt::can_negate_modular<int>(y));
+  constexpr unsigned int x = 5;
+  STATIC_REQUIRE_FALSE(bt::can_negate<unsigned int>(x));
+  STATIC_REQUIRE(bt::can_negate_modular<unsigned int>(x));
+  constexpr int y = std::numeric_limits<int>::min();
+  STATIC_REQUIRE_FALSE(bt::can_negate<int>(y));
+  STATIC_REQUIRE_FALSE(bt::can_negate_modular<int>(y));
 }
 
 TEST_CASE("can_add unsigned", "[bt::can_add]") {
