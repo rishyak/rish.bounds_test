@@ -16,7 +16,7 @@ namespace bt = beman::bounds_test;
 #define SIGNED_TYPES             SIGNED_TYPES_PROMOTE, SIGNED_TYPES_NOPROMOTE
 #define UNSIGNED_TYPES_PROMOTE   unsigned char, unsigned short
 #define UNSIGNED_TYPES_NOPROMOTE unsigned int, unsigned long, unsigned long long
-#define UNSIGNED_TYPES           UNSIGNED_TYPES_NOPROMOTE, UNSIGNED_TYPES_PROMOTE
+#define UNSIGNED_TYPES           UNSIGNED_TYPES_PROMOTE, UNSIGNED_TYPES_NOPROMOTE
 #define ALL_TYPES                SIGNED_TYPES, UNSIGNED_TYPES
 
 TEST_CASE("can_convert calls a standard library function", "[bt::can_convert]") {
@@ -25,6 +25,16 @@ TEST_CASE("can_convert calls a standard library function", "[bt::can_convert]") 
 
 TEST_CASE("can_convert_modular always returns true", "[bt::can_convert_modular]") {
   STATIC_REQUIRE(bt::can_convert_modular<int>(0));
+}
+
+TEMPLATE_TEST_CASE("can_increment", "[bt::can_increment]", ALL_TYPES) {
+  STATIC_REQUIRE(bt::can_increment(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE_FALSE(bt::can_increment(std::numeric_limits<TestType>::max()));
+}
+
+TEMPLATE_TEST_CASE("can_decrement", "[bt::can_decrement]", ALL_TYPES) {
+  STATIC_REQUIRE_FALSE(bt::can_decrement(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE(bt::can_decrement(std::numeric_limits<TestType>::max()));
 }
 
 TEST_CASE("can_promote always returns true", "[bt::can_promote]") {
@@ -60,6 +70,26 @@ TEMPLATE_TEST_CASE("can_negate unsigned types that don't get promoted to int",
                    UNSIGNED_TYPES_NOPROMOTE) {
   STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::min()));
   STATIC_REQUIRE_FALSE(bt::can_negate(std::numeric_limits<TestType>::max()));
+}
+
+TEMPLATE_TEST_CASE("can_increment_modular unsigned", "[bt::can_increment_modular]", UNSIGNED_TYPES) {
+  STATIC_REQUIRE(bt::can_increment_modular(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE(bt::can_increment_modular(std::numeric_limits<TestType>::max()));
+}
+
+TEMPLATE_TEST_CASE("can_increment_modular signed", "[bt::can_increment_modular]", SIGNED_TYPES) {
+  STATIC_REQUIRE(bt::can_increment_modular(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE_FALSE(bt::can_increment_modular(std::numeric_limits<TestType>::max()));
+}
+
+TEMPLATE_TEST_CASE("can_decrement_modular unsigned", "[bt::can_decrement_modular]", UNSIGNED_TYPES) {
+  STATIC_REQUIRE(bt::can_decrement_modular(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE(bt::can_decrement_modular(std::numeric_limits<TestType>::max()));
+}
+
+TEMPLATE_TEST_CASE("can_decrement_modular signed", "[bt::can_decrement_modular]", SIGNED_TYPES) {
+  STATIC_REQUIRE_FALSE(bt::can_decrement_modular(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE(bt::can_decrement_modular(std::numeric_limits<TestType>::max()));
 }
 
 TEST_CASE("can_promote_modular always returns true", "[bt::can_promote_modular]") {
