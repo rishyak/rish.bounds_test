@@ -28,9 +28,17 @@ runs:
       shell: bash
       if: ${{ !contains(runner.os, 'Windows') }}
       run: |
-        sudo apt-get install -y pkg-config
+        sudo apt-get install -y pkg-config zip
+    - name: Restore vcpkg cache
+      id: vcpkg-cache
+      uses: TAServers/vcpkg-cache@v3
+      with:
+        token: ${{ github.token }}
     - name: Configure CMake
       shell: bash
+      env:
+        CMAKE_GENERATOR: "Ninja Multi-Config"
+        VCPKG_BINARY_SOURCES: "clear;files,${{ steps.vcpkg-cache.outputs.path }},readwrite"
       run: |
         cmake \
         -B build \
@@ -39,8 +47,6 @@ runs:
         -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="$(pwd)/${{ inputs.toolchain_file }}" \
         -DBEMAN_BOUNDS_TEST_BOOTSTRAP_VCPKG=ON \
         ${{ matrix.cmake_args.args }}
-      env:
-        CMAKE_GENERATOR: "Ninja Multi-Config"
     - name: Build Release
       shell: bash
       run: |
