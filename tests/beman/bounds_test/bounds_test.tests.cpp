@@ -11,6 +11,14 @@ import beman.bounds_test;
 
 namespace bt = beman::bounds_test;
 
+#define SIGNED_TYPES_PROMOTE     signed char, short
+#define SIGNED_TYPES_NOPROMOTE   int, long, long long
+#define SIGNED_TYPES             SIGNED_TYPES_PROMOTE, SIGNED_TYPES_NOPROMOTE
+#define UNSIGNED_TYPES_PROMOTE   unsigned char, unsigned short
+#define UNSIGNED_TYPES_NOPROMOTE unsigned int, unsigned long, unsigned long long
+#define UNSIGNED_TYPES           UNSIGNED_TYPES_NOPROMOTE, UNSIGNED_TYPES_PROMOTE
+#define ALL_TYPES                SIGNED_TYPES, UNSIGNED_TYPES
+
 TEST_CASE("can_convert calls a standard library function", "[bt::can_convert]") {
   STATIC_REQUIRE(bt::can_convert<int>(0));
 }
@@ -23,7 +31,7 @@ TEST_CASE("can_promote always returns true", "[bt::can_promote]") {
   STATIC_REQUIRE(bt::can_promote(0));
 }
 
-TEMPLATE_TEST_CASE("can_negate signed types that get promoted to int", "[bt::can_negate]", std::int8_t, std::int16_t) {
+TEMPLATE_TEST_CASE("can_negate signed types that get promoted to int", "[bt::can_negate]", SIGNED_TYPES_PROMOTE) {
   STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::min()));
   STATIC_REQUIRE(bt::can_negate(TestType{-1}));
   STATIC_REQUIRE(bt::can_negate(TestType{0}));
@@ -33,8 +41,7 @@ TEMPLATE_TEST_CASE("can_negate signed types that get promoted to int", "[bt::can
 
 TEMPLATE_TEST_CASE("can_negate signed types that don't get promoted to int",
                    "[bt::can_negate]",
-                   std::int32_t,
-                   std::int64_t) {
+                   SIGNED_TYPES_NOPROMOTE) {
   STATIC_REQUIRE_FALSE(bt::can_negate(std::numeric_limits<TestType>::min()));
   STATIC_REQUIRE(bt::can_negate(TestType{-1}));
   STATIC_REQUIRE(bt::can_negate(TestType{0}));
@@ -42,10 +49,7 @@ TEMPLATE_TEST_CASE("can_negate signed types that don't get promoted to int",
   STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::max()));
 }
 
-TEMPLATE_TEST_CASE("can_negate unsigned types that get promoted to int",
-                   "[bt::can_negate]",
-                   std::uint8_t,
-                   std::uint16_t) {
+TEMPLATE_TEST_CASE("can_negate unsigned types that get promoted to int", "[bt::can_negate]", UNSIGNED_TYPES_PROMOTE) {
   STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::min()));
   STATIC_REQUIRE(bt::can_negate(TestType{0}));
   STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::max()));
@@ -53,8 +57,7 @@ TEMPLATE_TEST_CASE("can_negate unsigned types that get promoted to int",
 
 TEMPLATE_TEST_CASE("can_negate unsigned types that don't get promoted to int",
                    "[bt::can_negate]",
-                   std::uint32_t,
-                   std::uint64_t) {
+                   UNSIGNED_TYPES_NOPROMOTE) {
   STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::min()));
   STATIC_REQUIRE_FALSE(bt::can_negate(std::numeric_limits<TestType>::max()));
 }
@@ -67,7 +70,7 @@ TEST_CASE("can_negate_modular for unsigned types always returns true", "[bt::can
   STATIC_REQUIRE(bt::can_negate_modular(0));
 }
 
-TEMPLATE_TEST_CASE("can_add unsigned", "[bt::can_add]", std::uint8_t, std::uint16_t, std::uint32_t, std::uint64_t) {
+TEMPLATE_TEST_CASE("can_add unsigned", "[bt::can_add]", UNSIGNED_TYPES) {
   using result_t = decltype(TestType{} + TestType{});
   constexpr auto lmax = std::numeric_limits<result_t>::max();
   STATIC_REQUIRE(bt::can_add(result_t{0}, TestType{0}));
@@ -76,7 +79,7 @@ TEMPLATE_TEST_CASE("can_add unsigned", "[bt::can_add]", std::uint8_t, std::uint1
   STATIC_REQUIRE(!bt::can_add(result_t{lmax}, TestType{1}));
 }
 
-TEMPLATE_TEST_CASE("can_add signed", "[bt::can_add]", std::int8_t, std::int16_t, std::int32_t, std::int64_t) {
+TEMPLATE_TEST_CASE("can_add signed", "[bt::can_add]", SIGNED_TYPES) {
   using result_t = decltype(TestType{} + TestType{});
   constexpr auto lmin = std::numeric_limits<result_t>::min();
   constexpr auto lmax = std::numeric_limits<result_t>::max();
@@ -88,12 +91,7 @@ TEMPLATE_TEST_CASE("can_add signed", "[bt::can_add]", std::int8_t, std::int16_t,
   STATIC_REQUIRE(!bt::can_add(result_t{lmin}, TestType{-1}));
 }
 
-TEMPLATE_TEST_CASE("can_add_in_place unsigned",
-                   "[bt::can_add_in_place]",
-                   std::uint8_t,
-                   std::uint16_t,
-                   std::uint32_t,
-                   std::uint64_t) {
+TEMPLATE_TEST_CASE("can_add_in_place unsigned", "[bt::can_add_in_place]", UNSIGNED_TYPES) {
   constexpr auto lmax = std::numeric_limits<TestType>::max();
   STATIC_REQUIRE(bt::can_add_in_place(TestType{0}, TestType{0}));
   STATIC_REQUIRE(bt::can_add_in_place(TestType{1}, TestType{1}));
@@ -101,12 +99,7 @@ TEMPLATE_TEST_CASE("can_add_in_place unsigned",
   STATIC_REQUIRE(!bt::can_add_in_place(TestType{lmax}, TestType{1}));
 }
 
-TEMPLATE_TEST_CASE("can_add_in_place signed",
-                   "[bt::can_add_in_place]",
-                   std::int8_t,
-                   std::int16_t,
-                   std::int32_t,
-                   std::int64_t) {
+TEMPLATE_TEST_CASE("can_add_in_place signed", "[bt::can_add_in_place]", SIGNED_TYPES) {
   constexpr auto lmin = std::numeric_limits<TestType>::min();
   constexpr auto lmax = std::numeric_limits<TestType>::max();
   STATIC_REQUIRE(bt::can_add_in_place(TestType{0}, TestType{0}));
@@ -117,12 +110,7 @@ TEMPLATE_TEST_CASE("can_add_in_place signed",
   STATIC_REQUIRE(!bt::can_add_in_place(TestType{lmin}, TestType{-1}));
 }
 
-TEMPLATE_TEST_CASE("can_subtract unsigned",
-                   "[bt::can_subtract]",
-                   std::uint8_t,
-                   std::uint16_t,
-                   std::uint32_t,
-                   std::uint64_t) {
+TEMPLATE_TEST_CASE("can_subtract unsigned", "[bt::can_subtract]", UNSIGNED_TYPES) {
   using result_t = decltype(TestType{} - TestType{});
   constexpr auto lmin = std::numeric_limits<result_t>::min();
   STATIC_REQUIRE(bt::can_subtract(result_t{0}, TestType{0}));
@@ -131,12 +119,7 @@ TEMPLATE_TEST_CASE("can_subtract unsigned",
   STATIC_REQUIRE(!bt::can_subtract(result_t{lmin}, TestType{1}));
 }
 
-TEMPLATE_TEST_CASE("can_subtract signed",
-                   "[bt::can_subtract]",
-                   std::int8_t,
-                   std::int16_t,
-                   std::int32_t,
-                   std::int64_t) {
+TEMPLATE_TEST_CASE("can_subtract signed", "[bt::can_subtract]", SIGNED_TYPES) {
   using result_t = decltype(TestType{} - TestType{});
   constexpr auto lmin = std::numeric_limits<result_t>::min();
   constexpr auto lmax = std::numeric_limits<result_t>::max();
@@ -148,12 +131,7 @@ TEMPLATE_TEST_CASE("can_subtract signed",
   STATIC_REQUIRE(!bt::can_subtract(result_t{lmin}, TestType{1}));
 }
 
-TEMPLATE_TEST_CASE("can_subtract_in_place unsigned",
-                   "[bt::can_subtract_in_place]",
-                   std::uint8_t,
-                   std::uint16_t,
-                   std::uint32_t,
-                   std::uint64_t) {
+TEMPLATE_TEST_CASE("can_subtract_in_place unsigned", "[bt::can_subtract_in_place]", UNSIGNED_TYPES) {
   constexpr auto lmin = std::numeric_limits<TestType>::min();
   STATIC_REQUIRE(bt::can_subtract_in_place(TestType{0}, TestType{0}));
   STATIC_REQUIRE(bt::can_subtract_in_place(TestType{1}, TestType{1}));
@@ -161,12 +139,7 @@ TEMPLATE_TEST_CASE("can_subtract_in_place unsigned",
   STATIC_REQUIRE(!bt::can_subtract_in_place(TestType{lmin}, TestType{1}));
 }
 
-TEMPLATE_TEST_CASE("can_subtract_in_place signed",
-                   "[bt::can_subtract_in_place]",
-                   std::int8_t,
-                   std::int16_t,
-                   std::int32_t,
-                   std::int64_t) {
+TEMPLATE_TEST_CASE("can_subtract_in_place signed", "[bt::can_subtract_in_place]", SIGNED_TYPES) {
   constexpr auto lmin = std::numeric_limits<TestType>::min();
   constexpr auto lmax = std::numeric_limits<TestType>::max();
   STATIC_REQUIRE(bt::can_subtract_in_place(TestType{0}, TestType{0}));
