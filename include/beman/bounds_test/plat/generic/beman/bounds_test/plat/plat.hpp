@@ -36,11 +36,16 @@ constexpr bool can_mul(auto a, auto b, auto c) noexcept {
   constexpr auto lmax = std::numeric_limits<T>::max();
 
   if (!(a && b)) return true;
-  if constexpr (std::unsigned_integral<T>) return a <= lmax / b;
-  if (a == -1 && b == lmin) return false;
-  if (b == -1 && a == lmin) return false;
-  if (a > 0) return b > 0 ? a <= lmax / b : b >= lmin / a;
-  return b > 0 ? a >= lmin / b : b >= lmax / a;
+
+  // If-Else necessary to avoid signed comparison warnings
+  if constexpr (std::unsigned_integral<T>) {
+    return a <= lmax / b;
+  } else {
+    if (a == -1 && b == lmin) return false;
+    if (b == -1 && a == lmin) return false;
+    if (a > 0) return b > 0 ? a <= lmax / b : b >= lmin / a;
+    return b > 0 ? a >= lmin / b : b >= lmax / a;
+  }
 }
 
 } // namespace beman::bounds_test::detail

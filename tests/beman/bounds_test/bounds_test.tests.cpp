@@ -109,7 +109,7 @@ TEMPLATE_TEST_CASE("can_add unsigned", "[bt::can_add]", UNSIGNED_TYPES) {
   STATIC_REQUIRE(bt::can_add(result_t{0}, TestType{0}));
   STATIC_REQUIRE(bt::can_add(result_t{1}, TestType{1}));
   STATIC_REQUIRE(bt::can_add(result_t{lmax}, TestType{0}));
-  STATIC_REQUIRE(!bt::can_add(result_t{lmax}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_add(result_t{lmax}, TestType{1}));
 }
 
 TEMPLATE_TEST_CASE("can_add signed", "[bt::can_add]", SIGNED_TYPES) {
@@ -120,8 +120,8 @@ TEMPLATE_TEST_CASE("can_add signed", "[bt::can_add]", SIGNED_TYPES) {
   STATIC_REQUIRE(bt::can_add(result_t{1}, TestType{1}));
   STATIC_REQUIRE(bt::can_add(result_t{lmax}, TestType{-1}));
   STATIC_REQUIRE(bt::can_add(result_t{lmin}, TestType{1}));
-  STATIC_REQUIRE(!bt::can_add(result_t{lmax}, TestType{1}));
-  STATIC_REQUIRE(!bt::can_add(result_t{lmin}, TestType{-1}));
+  STATIC_REQUIRE_FALSE(bt::can_add(result_t{lmax}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_add(result_t{lmin}, TestType{-1}));
 }
 
 TEMPLATE_TEST_CASE("can_add_in_place unsigned", "[bt::can_add_in_place]", UNSIGNED_TYPES) {
@@ -129,7 +129,7 @@ TEMPLATE_TEST_CASE("can_add_in_place unsigned", "[bt::can_add_in_place]", UNSIGN
   STATIC_REQUIRE(bt::can_add_in_place(TestType{0}, TestType{0}));
   STATIC_REQUIRE(bt::can_add_in_place(TestType{1}, TestType{1}));
   STATIC_REQUIRE(bt::can_add_in_place(TestType{lmax}, TestType{0}));
-  STATIC_REQUIRE(!bt::can_add_in_place(TestType{lmax}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_add_in_place(TestType{lmax}, TestType{1}));
 }
 
 TEMPLATE_TEST_CASE("can_add_in_place signed", "[bt::can_add_in_place]", SIGNED_TYPES) {
@@ -139,8 +139,8 @@ TEMPLATE_TEST_CASE("can_add_in_place signed", "[bt::can_add_in_place]", SIGNED_T
   STATIC_REQUIRE(bt::can_add_in_place(TestType{1}, TestType{1}));
   STATIC_REQUIRE(bt::can_add_in_place(TestType{lmax}, TestType{-1}));
   STATIC_REQUIRE(bt::can_add_in_place(TestType{lmin}, TestType{1}));
-  STATIC_REQUIRE(!bt::can_add_in_place(TestType{lmax}, TestType{1}));
-  STATIC_REQUIRE(!bt::can_add_in_place(TestType{lmin}, TestType{-1}));
+  STATIC_REQUIRE_FALSE(bt::can_add_in_place(TestType{lmax}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_add_in_place(TestType{lmin}, TestType{-1}));
 }
 
 TEMPLATE_TEST_CASE("can_subtract unsigned", "[bt::can_subtract]", UNSIGNED_TYPES) {
@@ -149,7 +149,7 @@ TEMPLATE_TEST_CASE("can_subtract unsigned", "[bt::can_subtract]", UNSIGNED_TYPES
   STATIC_REQUIRE(bt::can_subtract(result_t{0}, TestType{0}));
   STATIC_REQUIRE(bt::can_subtract(result_t{1}, TestType{1}));
   STATIC_REQUIRE(bt::can_subtract(result_t{lmin}, TestType{0}));
-  STATIC_REQUIRE(!bt::can_subtract(result_t{lmin}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_subtract(result_t{lmin}, TestType{1}));
 }
 
 TEMPLATE_TEST_CASE("can_subtract signed", "[bt::can_subtract]", SIGNED_TYPES) {
@@ -160,8 +160,8 @@ TEMPLATE_TEST_CASE("can_subtract signed", "[bt::can_subtract]", SIGNED_TYPES) {
   STATIC_REQUIRE(bt::can_subtract(result_t{1}, TestType{1}));
   STATIC_REQUIRE(bt::can_subtract(result_t{lmax}, TestType{1}));
   STATIC_REQUIRE(bt::can_subtract(result_t{lmin}, TestType{-1}));
-  STATIC_REQUIRE(!bt::can_subtract(result_t{lmax}, TestType{-1}));
-  STATIC_REQUIRE(!bt::can_subtract(result_t{lmin}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_subtract(result_t{lmax}, TestType{-1}));
+  STATIC_REQUIRE_FALSE(bt::can_subtract(result_t{lmin}, TestType{1}));
 }
 
 TEMPLATE_TEST_CASE("can_subtract_in_place unsigned", "[bt::can_subtract_in_place]", UNSIGNED_TYPES) {
@@ -169,7 +169,7 @@ TEMPLATE_TEST_CASE("can_subtract_in_place unsigned", "[bt::can_subtract_in_place
   STATIC_REQUIRE(bt::can_subtract_in_place(TestType{0}, TestType{0}));
   STATIC_REQUIRE(bt::can_subtract_in_place(TestType{1}, TestType{1}));
   STATIC_REQUIRE(bt::can_subtract_in_place(TestType{lmin}, TestType{0}));
-  STATIC_REQUIRE(!bt::can_subtract_in_place(TestType{lmin}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_subtract_in_place(TestType{lmin}, TestType{1}));
 }
 
 TEMPLATE_TEST_CASE("can_subtract_in_place signed", "[bt::can_subtract_in_place]", SIGNED_TYPES) {
@@ -179,8 +179,37 @@ TEMPLATE_TEST_CASE("can_subtract_in_place signed", "[bt::can_subtract_in_place]"
   STATIC_REQUIRE(bt::can_subtract_in_place(TestType{1}, TestType{1}));
   STATIC_REQUIRE(bt::can_subtract_in_place(TestType{lmax}, TestType{1}));
   STATIC_REQUIRE(bt::can_subtract_in_place(TestType{lmin}, TestType{-1}));
-  STATIC_REQUIRE(!bt::can_subtract_in_place(TestType{lmax}, TestType{-1}));
-  STATIC_REQUIRE(!bt::can_subtract_in_place(TestType{lmin}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_subtract_in_place(TestType{lmax}, TestType{-1}));
+  STATIC_REQUIRE_FALSE(bt::can_subtract_in_place(TestType{lmin}, TestType{1}));
+}
+
+TEMPLATE_TEST_CASE("can_multiply unsigned", "[bt::can_multiply]", UNSIGNED_TYPES) {
+  using result_t = decltype(TestType{} * TestType{});
+  constexpr auto lmax = nl<result_t>::max();
+  STATIC_REQUIRE(bt::can_multiply(result_t{0}, TestType{0}));
+  STATIC_REQUIRE(bt::can_multiply(result_t{1}, TestType{1}));
+  STATIC_REQUIRE(bt::can_multiply(result_t{lmax}, TestType{0}));
+  STATIC_REQUIRE_FALSE(bt::can_multiply(result_t{lmax}, TestType{2}));
+}
+
+TEMPLATE_TEST_CASE("can_multiply signed promote", "[bt::can_multiply]", SIGNED_TYPES_PROMOTE) {
+  using result_t = decltype(TestType{} * TestType{});
+  STATIC_REQUIRE(bt::can_multiply(TestType{0}, TestType{0}));
+  STATIC_REQUIRE(bt::can_multiply(TestType{1}, TestType{1}));
+  STATIC_REQUIRE(bt::can_multiply(nl<TestType>::min(), TestType{2}));
+  STATIC_REQUIRE(bt::can_multiply(nl<TestType>::max(), TestType{2}));
+  STATIC_REQUIRE_FALSE(bt::can_multiply(nl<result_t>::min(), nl<TestType>::min()));
+  STATIC_REQUIRE_FALSE(bt::can_multiply(nl<result_t>::max(), nl<TestType>::max()));
+}
+
+TEMPLATE_TEST_CASE("can_multiply signed no promote", "[bt::can_multiply]", SIGNED_TYPES_NOPROMOTE) {
+  constexpr auto lmin = nl<TestType>::min();
+  constexpr auto lmax = nl<TestType>::max();
+  STATIC_REQUIRE(bt::can_multiply(TestType{0}, TestType{0}));
+  STATIC_REQUIRE(bt::can_multiply(TestType{1}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_multiply(lmin, TestType{2}));
+  STATIC_REQUIRE_FALSE(bt::can_multiply(lmax, TestType{2}));
+  STATIC_REQUIRE_FALSE(bt::can_multiply(lmin, TestType{-1}));
 }
 
 TEST_CASE("can_take_remainder is can_divide", "[bt::can_take_remainder]") {
