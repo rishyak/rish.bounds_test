@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_all.hpp>
 #include <cstdint>
 #include <limits>
 
@@ -23,39 +23,48 @@ TEST_CASE("can_promote always returns true", "[bt::can_promote]") {
   STATIC_REQUIRE(bt::can_promote(0));
 }
 
-TEST_CASE("can_negate signed types", "[bt::can_negate]") {
-  STATIC_REQUIRE(bt::can_negate<std::int64_t>(0));
-  STATIC_REQUIRE(bt::can_negate<std::int64_t>(42));
-  STATIC_REQUIRE(bt::can_negate<std::int64_t>(-42));
-  STATIC_REQUIRE_FALSE(bt::can_negate<std::int64_t>(std::numeric_limits<std::int64_t>::min()));
-  STATIC_REQUIRE(bt::can_negate<int>(0));
-  STATIC_REQUIRE(bt::can_negate<int>(42));
-  STATIC_REQUIRE(bt::can_negate<int>(-42));
-  STATIC_REQUIRE_FALSE(bt::can_negate<int>(std::numeric_limits<int>::min()));
-  // get promoted to int
-  STATIC_REQUIRE(bt::can_negate<std::int16_t>(0));
-  STATIC_REQUIRE(bt::can_negate<std::int16_t>(42));
-  STATIC_REQUIRE(bt::can_negate<std::int16_t>(-42));
-  STATIC_REQUIRE(bt::can_negate<std::int8_t>(std::numeric_limits<char>::min()));
+TEMPLATE_TEST_CASE("can_negate signed types that get promoted to int", "[bt::can_negate]", std::int8_t, std::int16_t) {
+  STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE(bt::can_negate(TestType{-1}));
+  STATIC_REQUIRE(bt::can_negate(TestType{0}));
+  STATIC_REQUIRE(bt::can_negate(TestType{1}));
+  STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::max()));
 }
 
-TEST_CASE("can_negate unsigned types narrower than int", "[bt::can_negate]") {
-  STATIC_REQUIRE(bt::can_negate<std::uint8_t>(0));
-  STATIC_REQUIRE(bt::can_negate<std::uint8_t>(1));
-  STATIC_REQUIRE(bt::can_negate<std::uint16_t>(255));
+TEMPLATE_TEST_CASE("can_negate signed types that don't get promoted to int",
+                   "[bt::can_negate]",
+                   std::int32_t,
+                   std::int64_t) {
+  STATIC_REQUIRE_FALSE(bt::can_negate(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE(bt::can_negate(TestType{-1}));
+  STATIC_REQUIRE(bt::can_negate(TestType{0}));
+  STATIC_REQUIRE(bt::can_negate(TestType{1}));
+  STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::max()));
 }
 
-TEST_CASE("unsigned types wider than int", "[bt::can_negate]") {
-  STATIC_REQUIRE(bt::can_negate<unsigned int>(0));
-  STATIC_REQUIRE_FALSE(bt::can_negate<unsigned int>(1));
+TEMPLATE_TEST_CASE("can_negate unsigned types that get promoted to int",
+                   "[bt::can_negate]",
+                   std::uint8_t,
+                   std::uint16_t) {
+  STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE(bt::can_negate(TestType{0}));
+  STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::max()));
+}
+
+TEMPLATE_TEST_CASE("can_negate unsigned types that don't get promoted to int",
+                   "[bt::can_negate]",
+                   std::uint32_t,
+                   std::uint64_t) {
+  STATIC_REQUIRE(bt::can_negate(std::numeric_limits<TestType>::min()));
+  STATIC_REQUIRE_FALSE(bt::can_negate(std::numeric_limits<TestType>::max()));
 }
 
 TEST_CASE("can_promote_modular always returns true", "[bt::can_promote_modular]") {
-  STATIC_REQUIRE(true);
+  STATIC_REQUIRE(bt::can_promote_modular(0));
 }
 
 TEST_CASE("can_negate_modular for unsigned types always returns true", "[bt::can_negate_modular]") {
-  STATIC_REQUIRE(true);
+  STATIC_REQUIRE(bt::can_negate_modular(0));
 }
 
 TEST_CASE("can_negate_modular behaviour differs only for unsigned", "[comparison][bt::can_negate_modular]") {
