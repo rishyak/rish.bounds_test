@@ -1,4 +1,4 @@
-include(${CMAKE_CURRENT_LIST_DIR}/beman.exemplar-targets.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/beman.bounds_test-targets.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/check_plat.cmake)
 
 check_plat(HAS_GNU_OVERFLOW HAS_MSVC_OVERFLOW)
@@ -32,9 +32,9 @@ set(_IMPORT_PREFIX)
 set(HAS_GNU_OVERFLOW)
 set(HAS_MSVC_OVERFLOW)
 
-foreach(comp IN LISTS beman.exemplar_FIND_COMPONENTS)
-    if(beman.exemplar_FIND_REQUIRED_${comp})
-        set(beman.exemplar_FOUND FALSE)
+foreach(comp IN LISTS beman.bounds_test_FIND_COMPONENTS)
+    if(beman.bounds_test_FIND_REQUIRED_${comp})
+        set(beman.bounds_test_FOUND FALSE)
         return()
     endif()
 endforeach()
