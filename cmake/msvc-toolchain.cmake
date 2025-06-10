@@ -19,3 +19,23 @@ include_guard(GLOBAL)
 
 set(CMAKE_C_COMPILER cl)
 set(CMAKE_CXX_COMPILER cl)
+
+# Off until I figure out how I want to handle vcpkg (dependencies also need to
+# be built with address sanitizer)
+# if(BEMAN_BUILDSYS_SANITIZER STREQUAL "MaxSan")
+if(OFF)
+    # /Zi flag (add debug symbol) is needed when using address sanitizer
+    # See C5072: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-c5072
+    set(SANITIZER_FLAGS "/fsanitize=address /Zi")
+endif()
+
+set(CMAKE_CXX_FLAGS_DEBUG_INIT "/EHsc /permissive- ${SANITIZER_FLAGS}")
+set(CMAKE_C_FLAGS_DEBUG_INIT "/EHsc /permissive- ${SANITIZER_FLAGS}")
+
+set(RELEASE_FLAGS "/EHsc /permissive- /O2 ${SANITIZER_FLAGS}")
+
+set(CMAKE_C_FLAGS_RELWITHDEBINFO_INIT "${RELEASE_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT "${RELEASE_FLAGS}")
+
+set(CMAKE_C_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE_INIT "${RELEASE_FLAGS}")
