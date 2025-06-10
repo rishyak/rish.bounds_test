@@ -124,11 +124,11 @@ jobs:
       matrix:
         args:
           - name: "Disable build testing"
-            arg: "-DBEMAN_EXEMPLAR_BUILD_TESTS=OFF"
+            arg: "-DBEMAN_BOUNDS_TEST_BUILD_TESTS=OFF"
           - name: "Disable example building"
-            arg: "-DBEMAN_EXEMPLAR_BUILD_EXAMPLES=OFF"
+            arg: "-DBEMAN_BOUNDS_TEST_BUILD_EXAMPLES=OFF"
           - name: "Disable config-file package creation"
-            arg: "-DBEMAN_EXEMPLAR_INSTALL_CONFIG_FILE_PACKAGE=OFF"
+            arg: "-DBEMAN_BOUNDS_TEST_INSTALL_CONFIG_FILE_PACKAGE=OFF"
     name: "CMake: ${{ matrix.args.name }}"
     steps:
       - uses: actions/checkout@v4
