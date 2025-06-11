@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <catch2/catch_all.hpp>
 #include <limits>
+#include <tuple>
+#include <type_traits>
 
 #ifdef __INTELLISENSE__
 #include <beman/bounds_test/bounds_test.hpp>
@@ -13,13 +15,38 @@ namespace bt = beman::bounds_test;
 template <typename T>
 using nl = std::numeric_limits<T>;
 
-#define SIGNED_TYPES_PROMOTE     signed char, short
-#define SIGNED_TYPES_NOPROMOTE   int, long, long long
-#define SIGNED_TYPES             SIGNED_TYPES_PROMOTE, SIGNED_TYPES_NOPROMOTE
-#define UNSIGNED_TYPES_PROMOTE   unsigned char, unsigned short
-#define UNSIGNED_TYPES_NOPROMOTE unsigned int, unsigned long, unsigned long long
-#define UNSIGNED_TYPES           UNSIGNED_TYPES_PROMOTE, UNSIGNED_TYPES_NOPROMOTE
-#define ALL_TYPES                SIGNED_TYPES, UNSIGNED_TYPES
+// Macros produce better test names than type lists
+#define SIGNED_TYPES   signed char, short, int, long, long long
+#define UNSIGNED_TYPES unsigned char, unsigned short, unsigned int, unsigned long, unsigned long long
+#define ALL_TYPES      SIGNED_TYPES, UNSIGNED_TYPES
+
+template <typename T>
+concept promote_range = nl<decltype(+T{})>::max() > nl<T>::max();
+
+template <typename... Ts>
+struct promote_helper;
+
+template <typename T1, typename... Ts>
+struct promote_helper<T1, Ts...> {
+  using promote = decltype(std::tuple_cat(std::conditional_t<promote_range<T1>, std::tuple<T1>, std::tuple<>>{},
+                                          typename promote_helper<Ts...>::promote{}));
+  using nopromote = decltype(std::tuple_cat(std::conditional_t<promote_range<T1>, std::tuple<>, std::tuple<T1>>{},
+                                            typename promote_helper<Ts...>::nopromote{}));
+};
+
+template <>
+struct promote_helper<> {
+  using promote = std::tuple<>;
+  using nopromote = std::tuple<>;
+};
+
+// Use type lists only for types where we need to check for platform-defined
+// range promotion. Note: these check for types where promotion results in an
+// increase in value range, not merely a change in type
+using signed_promote = promote_helper<SIGNED_TYPES>::promote;
+using signed_nopromote = promote_helper<SIGNED_TYPES>::nopromote;
+using unsigned_promote = promote_helper<UNSIGNED_TYPES>::promote;
+using unsigned_nopromote = promote_helper<UNSIGNED_TYPES>::nopromote;
 
 TEST_CASE("can_convert calls a standard library function", "[bt::can_convert]") {
   STATIC_REQUIRE(bt::can_convert<int>(0));
@@ -43,7 +70,7 @@ TEST_CASE("can_promote always returns true", "[bt::can_promote]") {
   STATIC_REQUIRE(bt::can_promote(0));
 }
 
-TEMPLATE_TEST_CASE("can_negate signed types that get promoted to int", "[bt::can_negate]", SIGNED_TYPES_PROMOTE) {
+TEMPLATE_LIST_TEST_CASE("can_negate signed types that get promoted to int", "[bt::can_negate]", signed_promote) {
   STATIC_REQUIRE(bt::can_negate(nl<TestType>::min()));
   STATIC_REQUIRE(bt::can_negate(TestType{-1}));
   STATIC_REQUIRE(bt::can_negate(TestType{0}));
@@ -51,9 +78,9 @@ TEMPLATE_TEST_CASE("can_negate signed types that get promoted to int", "[bt::can
   STATIC_REQUIRE(bt::can_negate(nl<TestType>::max()));
 }
 
-TEMPLATE_TEST_CASE("can_negate signed types that don't get promoted to int",
-                   "[bt::can_negate]",
-                   SIGNED_TYPES_NOPROMOTE) {
+TEMPLATE_LIST_TEST_CASE("can_negate signed types that don't get promoted to int",
+                        "[bt::can_negate]",
+                        signed_nopromote) {
   STATIC_REQUIRE_FALSE(bt::can_negate(nl<TestType>::min()));
   STATIC_REQUIRE(bt::can_negate(TestType{-1}));
   STATIC_REQUIRE(bt::can_negate(TestType{0}));
@@ -61,15 +88,15 @@ TEMPLATE_TEST_CASE("can_negate signed types that don't get promoted to int",
   STATIC_REQUIRE(bt::can_negate(nl<TestType>::max()));
 }
 
-TEMPLATE_TEST_CASE("can_negate unsigned types that get promoted to int", "[bt::can_negate]", UNSIGNED_TYPES_PROMOTE) {
+TEMPLATE_LIST_TEST_CASE("can_negate unsigned types that get promoted to int", "[bt::can_negate]", unsigned_promote) {
   STATIC_REQUIRE(bt::can_negate(nl<TestType>::min()));
   STATIC_REQUIRE(bt::can_negate(TestType{0}));
   STATIC_REQUIRE(bt::can_negate(nl<TestType>::max()));
 }
 
-TEMPLATE_TEST_CASE("can_negate unsigned types that don't get promoted to int",
-                   "[bt::can_negate]",
-                   UNSIGNED_TYPES_NOPROMOTE) {
+TEMPLATE_LIST_TEST_CASE("can_negate unsigned types that don't get promoted to int",
+                        "[bt::can_negate]",
+                        unsigned_nopromote) {
   STATIC_REQUIRE(bt::can_negate(nl<TestType>::min()));
   STATIC_REQUIRE_FALSE(bt::can_negate(nl<TestType>::max()));
 }
@@ -191,7 +218,7 @@ TEMPLATE_TEST_CASE("can_multiply unsigned", "[bt::can_multiply]", UNSIGNED_TYPES
   STATIC_REQUIRE_FALSE(bt::can_multiply(result_t{lmax}, TestType{2}));
 }
 
-TEMPLATE_TEST_CASE("can_multiply signed promote", "[bt::can_multiply]", SIGNED_TYPES_PROMOTE) {
+TEMPLATE_LIST_TEST_CASE("can_multiply signed promote", "[bt::can_multiply]", signed_promote) {
   using result_t = decltype(TestType{} * TestType{});
   STATIC_REQUIRE(bt::can_multiply(TestType{0}, TestType{0}));
   STATIC_REQUIRE(bt::can_multiply(TestType{1}, TestType{1}));
@@ -201,7 +228,7 @@ TEMPLATE_TEST_CASE("can_multiply signed promote", "[bt::can_multiply]", SIGNED_T
   STATIC_REQUIRE_FALSE(bt::can_multiply(nl<result_t>::max(), nl<TestType>::max()));
 }
 
-TEMPLATE_TEST_CASE("can_multiply signed no promote", "[bt::can_multiply]", SIGNED_TYPES_NOPROMOTE) {
+TEMPLATE_LIST_TEST_CASE("can_multiply signed no promote", "[bt::can_multiply]", signed_nopromote) {
   constexpr auto lmin = nl<TestType>::min();
   constexpr auto lmax = nl<TestType>::max();
   STATIC_REQUIRE(bt::can_multiply(TestType{0}, TestType{0}));
