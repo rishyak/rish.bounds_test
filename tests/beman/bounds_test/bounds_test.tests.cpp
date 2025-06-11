@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #include <catch2/catch_all.hpp>
-#include <cstdint>
 #include <limits>
 
 #ifdef __INTELLISENSE__

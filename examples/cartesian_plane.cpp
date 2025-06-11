@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <concepts>
-#include <cstdint>
 #include <iostream>
 #include <optional>
+#include <type_traits>
 
 // Alternatively: #include <beman/bounds_test/bounds_test.hpp>
 import beman.bounds_test;
