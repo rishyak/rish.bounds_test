@@ -283,7 +283,6 @@ TEMPLATE_TEST_CASE_SIG("can_bitwise_xor_in_place<int8_t,int16_t>",
                        ((typename A, typename B, int ID), A, B, ID),
                        (signed char, short, 1),
                        (signed char, long long, 1)) {
-  constexpr auto amin = std::numeric_limits<A>::lowest();
   constexpr auto amax = std::numeric_limits<A>::max();
 
   STATIC_REQUIRE(bt::can_bitwise_xor_in_place<A, B>(A{-1}, B{1}));
@@ -299,9 +298,6 @@ TEMPLATE_TEST_CASE_SIG("can_bitwise_or_in_place<int8_t,int16_t>",
                        ((typename A, typename B, int ID), A, B, ID),
                        (signed char, short, 1),
                        (signed char, long long, 1)) {
-  constexpr auto amin = std::numeric_limits<A>::lowest();
-  constexpr auto amax = std::numeric_limits<A>::max();
-
   STATIC_REQUIRE(bt::can_bitwise_or_in_place<A, B>(A{10}, B{5}));
   STATIC_REQUIRE(bt::can_bitwise_or_in_place<A, B>(A{-128}, B{1}));
   STATIC_REQUIRE(bt::can_bitwise_or_in_place<A, B>(A{1}, B{126}));
