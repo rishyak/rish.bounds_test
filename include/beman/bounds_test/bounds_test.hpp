@@ -64,7 +64,9 @@ constexpr bool can_negate(A a) noexcept {
 }
 
 template <std::integral A>
-constexpr bool can_bitwise_not(A a) noexcept;
+constexpr bool can_bitwise_not(A /* a */) noexcept {
+  return true;
+}
 
 template <std::integral A>
 constexpr bool can_increment_modular(A a) noexcept {
@@ -89,7 +91,9 @@ constexpr bool can_negate_modular(A a) noexcept {
 }
 
 template <std::integral A>
-constexpr bool can_bitwise_not_modular(A a) noexcept;
+constexpr bool can_bitwise_not_modular(A /* a */) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
 constexpr bool can_add(A a, B b) noexcept {
@@ -123,13 +127,19 @@ template <std::integral A, std::integral B>
 constexpr bool can_shift_right(A a, B b) noexcept;
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_and(A a, B b) noexcept;
+constexpr bool can_bitwise_and(A /* a */, B /* b */) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_xor(A a, B b) noexcept;
+constexpr bool can_bitwise_xor(A /* a */, B /* b */) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_or(A a, B b) noexcept;
+constexpr bool can_bitwise_or(A /* a */, B /* b */) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
 constexpr bool can_compare(A a, B b) noexcept;
@@ -156,13 +166,19 @@ template <std::integral A, std::integral B>
 constexpr bool can_shift_right_modular(A, B) noexcept;
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_and_modular(A a, B b) noexcept;
+constexpr bool can_bitwise_and_modular(A /* a */, B /* b */) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_xor_modular(A a, B b) noexcept;
+constexpr bool can_bitwise_xor_modular(A /* a */, B /* b */) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_or_modular(A a, B b) noexcept;
+constexpr bool can_bitwise_or_modular(A /* a */, B /* b */) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
 constexpr bool can_add_in_place(A a, B b) noexcept {
@@ -196,13 +212,19 @@ template <std::integral A, std::integral B>
 constexpr bool can_shift_right_in_place(A a, B b) noexcept;
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_and_in_place(A a, B b) noexcept;
+constexpr bool can_bitwise_and_in_place(A a, B b) noexcept {
+  return std::in_range<A>(a & b);
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_xor_in_place(A a, B b) noexcept;
+constexpr bool can_bitwise_xor_in_place(A a, B b) noexcept {
+  return std::in_range<A>(a ^ b);
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_or_in_place(A a, B b) noexcept;
+constexpr bool can_bitwise_or_in_place(A a, B b) noexcept {
+  return std::in_range<A>(a | b);
+}
 
 template <std::integral A, std::integral B>
 constexpr bool can_add_in_place_modular(A a, B b) noexcept {
@@ -230,13 +252,19 @@ constexpr bool can_shift_right_in_place_modular(A a, B b) noexcept {
 };
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_and_in_place_modular(A a, B b) noexcept;
+constexpr bool can_bitwise_and_in_place_modular(A /* a */, B /* b */) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_xor_in_place_modular(A a, B b) noexcept;
+constexpr bool can_bitwise_xor_in_place_modular(A /* a */, B /* b */) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
-constexpr bool can_bitwise_or_in_place_modular(A a, B b) noexcept;
+constexpr bool can_bitwise_or_in_place_modular(A /* a */, B /* b */) noexcept {
+  return true;
+}
 
 } // namespace beman::bounds_test
 

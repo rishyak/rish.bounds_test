@@ -101,6 +101,10 @@ TEMPLATE_LIST_TEST_CASE("can_negate unsigned types that don't get promoted to in
   STATIC_REQUIRE_FALSE(bt::can_negate(nl<TestType>::max()));
 }
 
+TEST_CASE("can_bitwise_not is always true", "[bt::can_bitwise_not]") {
+  STATIC_REQUIRE(bt::can_bitwise_not(0));
+}
+
 TEMPLATE_TEST_CASE("can_increment_modular unsigned", "[bt::can_increment_modular]", UNSIGNED_TYPES) {
   STATIC_REQUIRE(bt::can_increment_modular(nl<TestType>::min()));
   STATIC_REQUIRE(bt::can_increment_modular(nl<TestType>::max()));
@@ -127,6 +131,10 @@ TEST_CASE("can_promote_modular always returns true", "[bt::can_promote_modular]"
 
 TEST_CASE("can_negate_modular for unsigned types always returns true", "[bt::can_negate_modular]") {
   STATIC_REQUIRE(bt::can_negate_modular(0));
+}
+
+TEST_CASE("can_bitwise_not_modular is always true", "[bt::can_bitwise_not_modular]") {
+  STATIC_REQUIRE(bt::can_bitwise_not_modular(0));
 }
 
 TEMPLATE_TEST_CASE("can_add unsigned", "[bt::can_add]", UNSIGNED_TYPES) {
@@ -242,6 +250,66 @@ TEST_CASE("can_take_remainder is can_divide", "[bt::can_take_remainder]") {
   STATIC_REQUIRE_FALSE(bt::can_take_remainder(0, 0));
 }
 
+TEST_CASE("can_bitwise_and is always true", "[bt::can_bitwise_and]") {
+  STATIC_REQUIRE(bt::can_bitwise_and(0, 0));
+}
+
+TEST_CASE("can_bitwise_xor is always true", "[bt::can_bitwise_xor]") {
+  STATIC_REQUIRE(bt::can_bitwise_xor(0, 0));
+}
+
+TEST_CASE("can_bitwise_or is always true", "[bt::can_bitwise_or]") {
+  STATIC_REQUIRE(bt::can_bitwise_or(0, 0));
+}
+
+TEMPLATE_TEST_CASE_SIG("can_bitwise_and_in_place",
+                       "[bt::can_bitwise_and_in_place]",
+                       ((typename A, typename B, int ID), A, B, ID),
+                       (signed char, short, 1),
+                       (signed char, long long, 1)) {
+  constexpr auto amin = std::numeric_limits<A>::lowest();
+  constexpr auto amax = std::numeric_limits<A>::max();
+
+  STATIC_REQUIRE(bt::can_bitwise_and_in_place<A, B>(A{5}, B{3}));
+  STATIC_REQUIRE(bt::can_bitwise_and_in_place<A, B>(A{-1}, B{1}));
+  STATIC_REQUIRE(bt::can_bitwise_and_in_place<A, B>(A{amax}, B{amax}));
+
+  STATIC_REQUIRE_FALSE(bt::can_bitwise_and_in_place<A, B>(A{-1}, B{256}));
+  STATIC_REQUIRE_FALSE(bt::can_bitwise_and_in_place<A, B>(A{amin}, B{256}));
+}
+
+TEMPLATE_TEST_CASE_SIG("can_bitwise_xor_in_place<int8_t,int16_t>",
+                       "[bt::can_bitwise_xor_in_place]",
+                       ((typename A, typename B, int ID), A, B, ID),
+                       (signed char, short, 1),
+                       (signed char, long long, 1)) {
+  constexpr auto amin = std::numeric_limits<A>::lowest();
+  constexpr auto amax = std::numeric_limits<A>::max();
+
+  STATIC_REQUIRE(bt::can_bitwise_xor_in_place<A, B>(A{-1}, B{1}));
+  STATIC_REQUIRE(bt::can_bitwise_xor_in_place<A, B>(A{-128}, B{1}));
+  STATIC_REQUIRE(bt::can_bitwise_xor_in_place<A, B>(A{5}, B{3}));
+
+  STATIC_REQUIRE_FALSE(bt::can_bitwise_xor_in_place<A, B>(A{-1}, B{256}));
+  STATIC_REQUIRE_FALSE(bt::can_bitwise_xor_in_place<A, B>(A{amax}, B{512}));
+}
+
+TEMPLATE_TEST_CASE_SIG("can_bitwise_or_in_place<int8_t,int16_t>",
+                       "[bt::can_bitwise_or_in_place]",
+                       ((typename A, typename B, int ID), A, B, ID),
+                       (signed char, short, 1),
+                       (signed char, long long, 1)) {
+  constexpr auto amin = std::numeric_limits<A>::lowest();
+  constexpr auto amax = std::numeric_limits<A>::max();
+
+  STATIC_REQUIRE(bt::can_bitwise_or_in_place<A, B>(A{10}, B{5}));
+  STATIC_REQUIRE(bt::can_bitwise_or_in_place<A, B>(A{-128}, B{1}));
+  STATIC_REQUIRE(bt::can_bitwise_or_in_place<A, B>(A{1}, B{126}));
+
+  STATIC_REQUIRE_FALSE(bt::can_bitwise_or_in_place<A, B>(A{64}, B{192}));
+  STATIC_REQUIRE_FALSE(bt::can_bitwise_or_in_place<A, B>(A{0}, B{256}));
+}
+
 TEST_CASE("can_take_remainder_in_place is can_divide_in_place", "[bt::can_take_remainder_in_place]") {
   STATIC_REQUIRE_FALSE(bt::can_take_remainder_in_place<int>(0, 0));
 }
@@ -284,4 +352,16 @@ TEMPLATE_TEST_CASE("can_shift_right_in_place_modular unsigned",
   STATIC_REQUIRE(bt::can_shift_right_in_place_modular(TestType{1}, digits - 1));
   STATIC_REQUIRE_FALSE(bt::can_shift_right_in_place_modular(TestType{1}, -1));
   STATIC_REQUIRE_FALSE(bt::can_shift_right_in_place_modular(TestType{1}, digits));
+}
+
+TEST_CASE("can_bitwise_and_in_place_modular is always true", "[bt::can_bitwise_and_in_place_modular]") {
+  STATIC_REQUIRE(bt::can_bitwise_and_in_place_modular(0, 0));
+}
+
+TEST_CASE("can_bitwise_xor_in_place_modular is always true", "[bt::can_bitwise_xor_in_place_modular]") {
+  STATIC_REQUIRE(bt::can_bitwise_xor_in_place_modular(0, 0));
+}
+
+TEST_CASE("can_bitwise_or_in_place_modular is always true", "[bt::can_bitwise_or_in_place_modular]") {
+  STATIC_REQUIRE(bt::can_bitwise_or_in_place_modular(0, 0));
 }
