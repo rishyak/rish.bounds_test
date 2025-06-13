@@ -245,3 +245,43 @@ TEST_CASE("can_take_remainder is can_divide", "[bt::can_take_remainder]") {
 TEST_CASE("can_take_remainder_in_place is can_divide_in_place", "[bt::can_take_remainder_in_place]") {
   STATIC_REQUIRE_FALSE(bt::can_take_remainder_in_place<int>(0, 0));
 }
+
+TEMPLATE_TEST_CASE("can_shift_left_in_place_modular signed", "[bt::can_shift_left_in_place_modular]", SIGNED_TYPES) {
+  constexpr auto digits = nl<TestType>::digits;
+  STATIC_REQUIRE(bt::can_shift_left_in_place_modular(TestType{0}, 0));
+  STATIC_REQUIRE(bt::can_shift_left_in_place_modular(TestType{1}, 1));
+  STATIC_REQUIRE(bt::can_shift_left_in_place_modular(TestType{1}, digits));
+  STATIC_REQUIRE_FALSE(bt::can_shift_left_in_place_modular(TestType{1}, -1));
+  STATIC_REQUIRE_FALSE(bt::can_shift_left_in_place_modular(TestType{1}, digits + 1));
+}
+
+TEMPLATE_TEST_CASE("can_shift_left_in_place_modular unsigned",
+                   "[bt::can_shift_left_in_place_modular]",
+                   UNSIGNED_TYPES) {
+  constexpr auto digits = nl<TestType>::digits;
+  STATIC_REQUIRE(bt::can_shift_left_in_place_modular(TestType{0}, 0));
+  STATIC_REQUIRE(bt::can_shift_left_in_place_modular(TestType{1}, 1));
+  STATIC_REQUIRE(bt::can_shift_left_in_place_modular(TestType{1}, digits - 1));
+  STATIC_REQUIRE_FALSE(bt::can_shift_left_in_place_modular(TestType{1}, -1));
+  STATIC_REQUIRE_FALSE(bt::can_shift_left_in_place_modular(TestType{1}, digits));
+}
+
+TEMPLATE_TEST_CASE("can_shift_right_in_place_modular signed", "[bt::can_shift_right_in_place_modular]", SIGNED_TYPES) {
+  constexpr auto digits = nl<TestType>::digits;
+  STATIC_REQUIRE(bt::can_shift_right_in_place_modular(TestType{0}, 0));
+  STATIC_REQUIRE(bt::can_shift_right_in_place_modular(TestType{1}, 1));
+  STATIC_REQUIRE(bt::can_shift_right_in_place_modular(TestType{1}, digits));
+  STATIC_REQUIRE_FALSE(bt::can_shift_right_in_place_modular(TestType{1}, -1));
+  STATIC_REQUIRE_FALSE(bt::can_shift_right_in_place_modular(TestType{1}, digits + 1));
+}
+
+TEMPLATE_TEST_CASE("can_shift_right_in_place_modular unsigned",
+                   "[bt::can_shift_right_in_place_modular]",
+                   UNSIGNED_TYPES) {
+  constexpr auto digits = nl<TestType>::digits;
+  STATIC_REQUIRE(bt::can_shift_right_in_place_modular(TestType{0}, 0));
+  STATIC_REQUIRE(bt::can_shift_right_in_place_modular(TestType{1}, 1));
+  STATIC_REQUIRE(bt::can_shift_right_in_place_modular(TestType{1}, digits - 1));
+  STATIC_REQUIRE_FALSE(bt::can_shift_right_in_place_modular(TestType{1}, -1));
+  STATIC_REQUIRE_FALSE(bt::can_shift_right_in_place_modular(TestType{1}, digits));
+}

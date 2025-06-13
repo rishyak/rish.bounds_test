@@ -220,10 +220,14 @@ template <std::integral A, std::integral B>
 constexpr bool can_multiply_in_place_modular(A a, B b) noexcept;
 
 template <std::integral A, std::integral B>
-constexpr bool can_shift_left_in_place_modular(A a, B b) noexcept;
+constexpr bool can_shift_left_in_place_modular(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_shift(a, b, a);
+};
 
 template <std::integral A, std::integral B>
-constexpr bool can_shift_right_in_place_modular(A a, B b) noexcept;
+constexpr bool can_shift_right_in_place_modular(A a, B b) noexcept {
+  return ::beman::bounds_test::detail::can_shift(a, b, a);
+};
 
 template <std::integral A, std::integral B>
 constexpr bool can_bitwise_and_in_place_modular(A a, B b) noexcept;
