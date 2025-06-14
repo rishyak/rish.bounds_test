@@ -158,25 +158,6 @@ TEMPLATE_TEST_CASE("can_add signed", "[bt::can_add]", SIGNED_TYPES) {
   STATIC_REQUIRE_FALSE(bt::can_add(result_t{lmin}, TestType{-1}));
 }
 
-TEMPLATE_TEST_CASE("can_add_in_place unsigned", "[bt::can_add_in_place]", UNSIGNED_TYPES) {
-  constexpr auto lmax = nl<TestType>::max();
-  STATIC_REQUIRE(bt::can_add_in_place(TestType{0}, TestType{0}));
-  STATIC_REQUIRE(bt::can_add_in_place(TestType{1}, TestType{1}));
-  STATIC_REQUIRE(bt::can_add_in_place(TestType{lmax}, TestType{0}));
-  STATIC_REQUIRE_FALSE(bt::can_add_in_place(TestType{lmax}, TestType{1}));
-}
-
-TEMPLATE_TEST_CASE("can_add_in_place signed", "[bt::can_add_in_place]", SIGNED_TYPES) {
-  constexpr auto lmin = nl<TestType>::min();
-  constexpr auto lmax = nl<TestType>::max();
-  STATIC_REQUIRE(bt::can_add_in_place(TestType{0}, TestType{0}));
-  STATIC_REQUIRE(bt::can_add_in_place(TestType{1}, TestType{1}));
-  STATIC_REQUIRE(bt::can_add_in_place(TestType{lmax}, TestType{-1}));
-  STATIC_REQUIRE(bt::can_add_in_place(TestType{lmin}, TestType{1}));
-  STATIC_REQUIRE_FALSE(bt::can_add_in_place(TestType{lmax}, TestType{1}));
-  STATIC_REQUIRE_FALSE(bt::can_add_in_place(TestType{lmin}, TestType{-1}));
-}
-
 TEMPLATE_TEST_CASE("can_subtract unsigned", "[bt::can_subtract]", UNSIGNED_TYPES) {
   using result_t = decltype(TestType{} - TestType{});
   constexpr auto lmin = nl<result_t>::min();
@@ -196,25 +177,6 @@ TEMPLATE_TEST_CASE("can_subtract signed", "[bt::can_subtract]", SIGNED_TYPES) {
   STATIC_REQUIRE(bt::can_subtract(result_t{lmin}, TestType{-1}));
   STATIC_REQUIRE_FALSE(bt::can_subtract(result_t{lmax}, TestType{-1}));
   STATIC_REQUIRE_FALSE(bt::can_subtract(result_t{lmin}, TestType{1}));
-}
-
-TEMPLATE_TEST_CASE("can_subtract_in_place unsigned", "[bt::can_subtract_in_place]", UNSIGNED_TYPES) {
-  constexpr auto lmin = nl<TestType>::min();
-  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{0}, TestType{0}));
-  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{1}, TestType{1}));
-  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{lmin}, TestType{0}));
-  STATIC_REQUIRE_FALSE(bt::can_subtract_in_place(TestType{lmin}, TestType{1}));
-}
-
-TEMPLATE_TEST_CASE("can_subtract_in_place signed", "[bt::can_subtract_in_place]", SIGNED_TYPES) {
-  constexpr auto lmin = nl<TestType>::min();
-  constexpr auto lmax = nl<TestType>::max();
-  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{0}, TestType{0}));
-  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{1}, TestType{1}));
-  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{lmax}, TestType{1}));
-  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{lmin}, TestType{-1}));
-  STATIC_REQUIRE_FALSE(bt::can_subtract_in_place(TestType{lmax}, TestType{-1}));
-  STATIC_REQUIRE_FALSE(bt::can_subtract_in_place(TestType{lmin}, TestType{1}));
 }
 
 TEMPLATE_TEST_CASE("can_multiply unsigned", "[bt::can_multiply]", UNSIGNED_TYPES) {
@@ -260,6 +222,44 @@ TEST_CASE("can_bitwise_xor is always true", "[bt::can_bitwise_xor]") {
 
 TEST_CASE("can_bitwise_or is always true", "[bt::can_bitwise_or]") {
   STATIC_REQUIRE(bt::can_bitwise_or(0, 0));
+}
+
+TEMPLATE_TEST_CASE("can_add_in_place unsigned", "[bt::can_add_in_place]", UNSIGNED_TYPES) {
+  constexpr auto lmax = nl<TestType>::max();
+  STATIC_REQUIRE(bt::can_add_in_place(TestType{0}, TestType{0}));
+  STATIC_REQUIRE(bt::can_add_in_place(TestType{1}, TestType{1}));
+  STATIC_REQUIRE(bt::can_add_in_place(TestType{lmax}, TestType{0}));
+  STATIC_REQUIRE_FALSE(bt::can_add_in_place(TestType{lmax}, TestType{1}));
+}
+
+TEMPLATE_TEST_CASE("can_add_in_place signed", "[bt::can_add_in_place]", SIGNED_TYPES) {
+  constexpr auto lmin = nl<TestType>::min();
+  constexpr auto lmax = nl<TestType>::max();
+  STATIC_REQUIRE(bt::can_add_in_place(TestType{0}, TestType{0}));
+  STATIC_REQUIRE(bt::can_add_in_place(TestType{1}, TestType{1}));
+  STATIC_REQUIRE(bt::can_add_in_place(TestType{lmax}, TestType{-1}));
+  STATIC_REQUIRE(bt::can_add_in_place(TestType{lmin}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_add_in_place(TestType{lmax}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_add_in_place(TestType{lmin}, TestType{-1}));
+}
+
+TEMPLATE_TEST_CASE("can_subtract_in_place unsigned", "[bt::can_subtract_in_place]", UNSIGNED_TYPES) {
+  constexpr auto lmin = nl<TestType>::min();
+  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{0}, TestType{0}));
+  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{1}, TestType{1}));
+  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{lmin}, TestType{0}));
+  STATIC_REQUIRE_FALSE(bt::can_subtract_in_place(TestType{lmin}, TestType{1}));
+}
+
+TEMPLATE_TEST_CASE("can_subtract_in_place signed", "[bt::can_subtract_in_place]", SIGNED_TYPES) {
+  constexpr auto lmin = nl<TestType>::min();
+  constexpr auto lmax = nl<TestType>::max();
+  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{0}, TestType{0}));
+  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{1}, TestType{1}));
+  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{lmax}, TestType{1}));
+  STATIC_REQUIRE(bt::can_subtract_in_place(TestType{lmin}, TestType{-1}));
+  STATIC_REQUIRE_FALSE(bt::can_subtract_in_place(TestType{lmax}, TestType{-1}));
+  STATIC_REQUIRE_FALSE(bt::can_subtract_in_place(TestType{lmin}, TestType{1}));
 }
 
 TEMPLATE_TEST_CASE_SIG("can_bitwise_and_in_place",
