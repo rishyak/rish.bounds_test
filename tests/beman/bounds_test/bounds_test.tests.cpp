@@ -179,6 +179,20 @@ TEMPLATE_TEST_CASE("can_subtract signed", "[bt::can_subtract]", SIGNED_TYPES) {
   STATIC_REQUIRE_FALSE(bt::can_subtract(result_t{lmin}, TestType{1}));
 }
 
+TEMPLATE_TEST_CASE("can_divide unsigned", "[bt::can_divide]", UNSIGNED_TYPES) {
+  STATIC_REQUIRE(bt::can_divide(TestType{0}, TestType{1}));
+  STATIC_REQUIRE(bt::can_divide(TestType{1}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_divide(TestType{1}, TestType{0}));
+}
+
+TEMPLATE_TEST_CASE("can_divide signed", "[bt::can_divide]", SIGNED_TYPES) {
+  using result_t = decltype(TestType{} / TestType{});
+  STATIC_REQUIRE(bt::can_divide(result_t{0}, TestType{1}));
+  STATIC_REQUIRE(bt::can_divide(result_t{1}, TestType{1}));
+  STATIC_REQUIRE_FALSE(bt::can_divide(result_t{1}, TestType{0}));
+  STATIC_REQUIRE_FALSE(bt::can_divide(result_t{nl<result_t>::min()}, TestType{-1}));
+}
+
 TEMPLATE_TEST_CASE("can_multiply unsigned", "[bt::can_multiply]", UNSIGNED_TYPES) {
   using result_t = decltype(TestType{} * TestType{});
   constexpr auto lmax = nl<result_t>::max();
