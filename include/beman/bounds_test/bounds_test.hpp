@@ -142,7 +142,9 @@ constexpr bool can_bitwise_or(A /* a */, B /* b */) noexcept {
 }
 
 template <std::integral A, std::integral B>
-constexpr bool can_compare(A a, B b) noexcept;
+constexpr bool can_compare(A a, B b) noexcept {
+  return true;
+}
 
 template <std::integral A, std::integral B>
 constexpr bool can_add_modular(A a, B b) noexcept {
